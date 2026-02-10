@@ -1,0 +1,582 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Sell / Direct sell Report</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Sell Report</li>
+                <li class="breadcrumb-item active">All Sell Report</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">Shop / Employee Wise Sell Report
+                            <a style="float: right;" routerLink="/admin/sell">New Sell</a>
+                        </h5>
+
+                        <!-- Filter Section -->
+                        <div class="row">
+                            <div class="row form-group col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>From Date</label>
+                                    <input type="date" [(ngModel)]="dailysell.FromDate" class="form-control">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>To Date</label>
+                                    <input type="date" [(ngModel)]="dailysell.ToDate" class="form-control">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Select Shop <span class="text-danger">*</span></label>
+                                    <select class="form-select" [(ngModel)]="SalesMan.ShopId"
+                                        (change)="selectShopAddress()">
+                                        <option value="">--Select Shop--</option>
+                                        <option [value]="model.ShopId" *ngFor="let model of ShopList">
+                                            {{model.ShopName}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>User <span class="text-danger">*</span></label>
+                                    <select class="form-select" [(ngModel)]="SalesMan.EmployeeId" required>
+                                        <option value="">--Select User--</option>
+                                        <option [value]="model.EmployeeId" *ngFor="let model of EmployeeList">
+                                            {{model.EmployeeName}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Address</label>
+                                    <input type="text" disabled [(ngModel)]="SalesMan.Address" class="form-control">
+                                </div>
+                                <div class="col-sm-2" style="margin-top: 20px;">
+                                    <button (click)="getEmployeeSalesReport()" class="btn btn-primary btn-sm">
+                                        Generate Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SHOP-WISE EMPLOYEE GROUPED REPORT -->
+                        <div *ngIf="showShopWiseReport && shopWiseReport" class="mt-4">
+                            <!-- Shop Summary Card -->
+                            <div class="card mb-3">
+                                <div class="card-header bg-success text-white">
+                                    <h3 class="mb-0">
+                                        <i class="bi bi-shop"></i> {{shopWiseReport.ShopSummary.ShopName}} - Overall
+                                        Summary
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 border rounded">
+                                                <h4 class="text-muted mb-2">Total Employees</h4>
+                                                <h3 class="text-primary">{{shopWiseReport.ShopSummary.TotalEmployees}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 border rounded">
+                                                <h4 class="text-muted mb-2">Total Sales</h4>
+                                                <h3 class="text-success">{{shopWiseReport.ShopSummary.TotalNoOfSales}}
+                                                </h3>
+                                                <small>
+                                                    <span class="badge bg-primary">Normal:
+                                                        {{shopWiseReport.ShopSummary.NormalSellCount}}</span>
+                                                    <span class="badge bg-success">Direct:
+                                                        {{shopWiseReport.ShopSummary.DirectSellCount}}</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 border rounded">
+                                                <h4 class="text-muted mb-2">Total Quantity</h4>
+                                                <h3 class="text-info">{{shopWiseReport.ShopSummary.TotalQuantitySold}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center p-3 border rounded">
+                                                <h4 class="text-muted mb-2">Net Amount</h4>
+                                                <h3 class="text-warning">
+                                                    ₹{{shopWiseReport.ShopSummary.TotalNetAmount|number:'1.2-2'}}</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Employee-wise Reports -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-people"></i> Employee-wise Sales Performance</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover" #shopWiseTable>
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Employee Name</th>
+                                                    <th>Total Sales</th>
+                                                    <th>Normal | Direct</th>
+                                                    <th>Quantity Sold</th>
+                                                    <th>Sales Amount</th>
+                                                    <th>Discount</th>
+                                                    <th>Net Amount</th>
+                                                    <th>Dues</th>
+                                                    <th>Avg Sale Value</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let emp of shopWiseReport.EmployeeWiseReports; let i = index">
+                                                    <td>{{i + 1}}</td>
+                                                    <td>
+                                                        <strong>{{emp.Summary.EmployeeName}}</strong>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span
+                                                            class="badge bg-info">{{emp.Summary.TotalNoOfSales}}</span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span
+                                                            class="badge bg-primary">{{emp.Summary.NormalSellCount}}</span>
+                                                        |
+                                                        <span
+                                                            class="badge bg-success">{{emp.Summary.DirectSellCount}}</span>
+                                                    </td>
+                                                    <td class="text-center">{{emp.Summary.TotalQuantitySold}}</td>
+                                                    <td class="text-end">
+                                                        ₹{{emp.Summary.TotalSalesAmount|number:'1.2-2'}}</td>
+                                                    <td class="text-end">
+                                                        ₹{{emp.Summary.TotalDiscountGiven|number:'1.2-2'}}</td>
+                                                    <td class="text-end">
+                                                        <strong>₹{{emp.Summary.TotalNetAmount|number:'1.2-2'}}</strong>
+                                                    </td>
+                                                    <td class="text-end text-danger">
+                                                        ₹{{emp.Summary.TotalDuesAmount|number:'1.2-2'}}</td>
+                                                    <td class="text-end">
+                                                        ₹{{emp.Summary.AverageSaleValue|number:'1.2-2'}}</td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-sm btn-outline-primary"
+                                                            (click)="viewEmployeeDetails(emp.Summary.EmployeeId)"
+                                                            title="View Detailed Report">
+                                                            <i class="bi bi-eye"></i> Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot class="table-secondary">
+                                                <tr>
+                                                    <th colspan="2">TOTAL</th>
+                                                    <th class="text-center">
+                                                        {{shopWiseReport.ShopSummary.TotalNoOfSales}}</th>
+                                                    <th class="text-center">
+                                                        <span
+                                                            class="badge bg-primary">{{shopWiseReport.ShopSummary.NormalSellCount}}</span>
+                                                        |
+                                                        <span
+                                                            class="badge bg-success">{{shopWiseReport.ShopSummary.DirectSellCount}}</span>
+                                                    </th>
+                                                    <th class="text-center">
+                                                        {{shopWiseReport.ShopSummary.TotalQuantitySold}}</th>
+                                                    <th class="text-end">
+                                                        ₹{{shopWiseReport.ShopSummary.TotalSalesAmount|number:'1.2-2'}}
+                                                    </th>
+                                                    <th class="text-end">
+                                                        ₹{{shopWiseReport.ShopSummary.TotalDiscountGiven|number:'1.2-2'}}
+                                                    </th>
+                                                    <th class="text-end">
+                                                        <strong>₹{{shopWiseReport.ShopSummary.TotalNetAmount|number:'1.2-2'}}</strong>
+                                                    </th>
+                                                    <th class="text-end text-danger">
+                                                        ₹{{shopWiseReport.ShopSummary.TotalDuesAmount|number:'1.2-2'}}
+                                                    </th>
+                                                    <th colspan="2"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button type="button" class="btn btn-primary me-2" (click)="exportToExcel()">
+                                        <i class="bi bi-file-excel"></i> Export To Excel
+                                    </button>
+                                    <button type="button" class="btn btn-info" (click)="printReport()">
+                                        <i class="bi bi-printer"></i> Print Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DETAILED UNIFIED REPORT SECTION -->
+                        <div *ngIf="showDetailedReport && reportData">
+                            <div class="mt-4">
+                                <!-- Tab Navigation -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link" [class.active]="selectedTab === 'summary'"
+                                            (click)="switchTab('summary')" style="cursor: pointer;">
+                                            Summary
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" [class.active]="selectedTab === 'details'"
+                                            (click)="switchTab('details')" style="cursor: pointer;">
+                                            Sale Details
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" [class.active]="selectedTab === 'selltype'"
+                                            (click)="switchTab('selltype')" style="cursor: pointer;">
+                                            Normal vs Direct
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" [class.active]="selectedTab === 'products'"
+                                            (click)="switchTab('products')" style="cursor: pointer;">
+                                            Normal Sell Product
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" [class.active]="selectedTab === 'directproducts'"
+                                            (click)="switchTab('directproducts')" style="cursor:pointer;">
+                                            Direct Sell Products
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" [class.active]="selectedTab === 'daily'"
+                                            (click)="switchTab('daily')" style="cursor: pointer;">
+                                            Daily Wise
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" [class.active]="selectedTab === 'category'"
+                                            (click)="switchTab('category')" style="cursor: pointer;">
+                                            Category Wise
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <!-- Summary Tab -->
+                                <div *ngIf="selectedTab === 'summary'" class="tab-content mt-3">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table class="table table-bordered" #summaryTable>
+                                                <tr>
+                                                    <th colspan="4" class="bg-primary text-white text-center">
+                                                        Employee Unified Sales Summary Report
+                                                    </th>
+                                                </tr>
+                                                <!-- <tr>
+                                                    <td><strong>Employee Name:</strong></td>
+                                                    <td>{{reportData.Summary.EmployeeName}}</td>
+                                                    <td><strong>Shop Name:</strong></td>
+                                                    <td>{{reportData.Summary.ShopName}}</td>
+                                                </tr> -->
+                                                <tr>
+                                                    <td><strong>Total No. of Sales:</strong></td>
+                                                    <td>{{reportData.Summary.TotalNoOfSales}}</td>
+                                                    <td><strong>Total Quantity Sold:</strong></td>
+                                                    <td>{{reportData.Summary.TotalQuantitySold}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Normal Sales Count:</strong></td>
+                                                    <td><span
+                                                            class="badge bg-primary">{{reportData.Summary.NormalSellCount}}</span>
+                                                    </td>
+                                                    <td><strong>Direct Sales Count:</strong></td>
+                                                    <td><span
+                                                            class="badge bg-success">{{reportData.Summary.DirectSellCount}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Total Sales Amount:</strong></td>
+                                                    <td>₹{{reportData.Summary.TotalSalesAmount|number:'1.2-2'}}</td>
+                                                    <td><strong>Total Discount:</strong></td>
+                                                    <td>₹{{reportData.Summary.TotalDiscountGiven|number:'1.2-2'}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Total Tax Amount:</strong></td>
+                                                    <td>₹{{reportData.Summary.TotalTaxAmount|number:'1.2-2'}}</td>
+                                                    <td><strong>Total Net Amount:</strong></td>
+                                                    <td>₹{{reportData.Summary.TotalNetAmount|number:'1.2-2'}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Average Sale Value:</strong></td>
+                                                    <td>₹{{reportData.Summary.AverageSaleValue|number:'1.2-2'}}</td>
+                                                    <td><strong>Total Dues:</strong></td>
+                                                    <td>₹{{reportData.Summary.TotalDuesAmount|number:'1.2-2'}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sale Details Tab -->
+                                <div *ngIf="selectedTab === 'details'" class="tab-content mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-sm" #detailsTable>
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Type</th>
+                                                    <th>Invoice No</th>
+                                                    <th>Date</th>
+                                                    <th>Customer</th>
+                                                    <th>Mobile</th>
+                                                    <th>Items</th>
+                                                    <th>Qty</th>
+                                                    <th>Amount</th>
+                                                    <th>Discount</th>
+                                                    <th>Net Amount</th>
+                                                    <th>Dues</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let sell of reportData.SellDetails|paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index">
+                                                    <td>{{(itemPerPage * (p -1)) + i + 1}}</td>
+                                                    <td>
+                                                        <span class="badge"
+                                                            [class.bg-primary]="sell.SellType === 'Normal'"
+                                                            [class.bg-success]="sell.SellType === 'Direct'">
+                                                            {{sell.SellType}}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{sell.InvoiceNo}}</td>
+                                                    <td>{{sell.InvoiceDate|date:'dd-MM-yyyy'}}</td>
+                                                    <td>{{sell.CustomerName}}</td>
+                                                    <td>{{sell.MobileNo}}</td>
+                                                    <td>{{sell.TotalItems}}</td>
+                                                    <td>{{sell.TotalQuantity}}</td>
+                                                    <td>₹{{sell.TotalAmount|number:'1.2-2'}}</td>
+                                                    <td>₹{{sell.DiscountAmount|number:'1.2-2'}}</td>
+                                                    <td>₹{{sell.NetAmount|number:'1.2-2'}}</td>
+                                                    <td>₹{{sell.DuesAmount|number:'1.2-2'}}</td>
+                                                    <td>{{sell.SellStatus}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                        class="my-pagination">
+                                    </pagination-controls>
+                                </div>
+
+                                <!-- Sell Type Breakdown Tab -->
+                                <div *ngIf="selectedTab === 'selltype'" class="tab-content mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-sm" #selltypeTable>
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Sell Type</th>
+                                                    <th>No. of Sales</th>
+                                                    <th>Total Quantity</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Total Discount</th>
+                                                    <th>Net Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let type of reportData.SellTypeBreakdown; let i = index">
+                                                    <td>{{i + 1}}</td>
+                                                    <td>
+                                                        <span class="badge"
+                                                            [class.bg-primary]="type.SellType === 'Normal'"
+                                                            [class.bg-success]="type.SellType === 'Direct'">
+                                                            {{type.SellType}}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{type.TotalSales}}</td>
+                                                    <td>{{type.TotalQuantity}}</td>
+                                                    <td>₹{{type.TotalAmount|number:'1.2-2'}}</td>
+                                                    <td>₹{{type.TotalDiscount|number:'1.2-2'}}</td>
+                                                    <td>₹{{type.NetAmount|number:'1.2-2'}}</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr class="table-secondary">
+                                                    <th colspan="2">TOTAL</th>
+                                                    <th>{{reportData.Summary.TotalNoOfSales}}</th>
+                                                    <th>{{reportData.Summary.TotalQuantitySold}}</th>
+                                                    <th>₹{{reportData.Summary.TotalSalesAmount|number:'1.2-2'}}</th>
+                                                    <th>₹{{reportData.Summary.TotalDiscountGiven|number:'1.2-2'}}</th>
+                                                    <th>₹{{reportData.Summary.TotalNetAmount|number:'1.2-2'}}</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Product Wise Tab -->
+                                <div *ngIf="selectedTab === 'products'" class="tab-content mt-3">
+                                    <div class="alert alert-info" *ngIf="reportData.ProductWiseSales.length === 0">
+                                        <i class="bi bi-info-circle"></i> No product-wise data available (Direct sells
+                                        don't have product details)
+                                    </div>
+                                    <div class="table-responsive" *ngIf="reportData.ProductWiseSales.length > 0">
+                                        <table class="table table-bordered table-hover table-sm" #productsTable>
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Product Name</th>
+                                                    <th>HSN Code</th>
+                                                    <th>Quantity Sold</th>
+                                                    <th>Sales Amount</th>
+                                                    <th>Discount</th>
+                                                    <th>Tax Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let product of reportData.ProductWiseSales|paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index">
+                                                    <td>{{(itemPerPage * (p -1)) + i + 1}}</td>
+                                                    <td>{{product.ProductName}}</td>
+                                                    <td>{{product.HSNCode}}</td>
+                                                    <td>{{product.TotalQuantitySold}}</td>
+                                                    <td>₹{{product.TotalSalesAmount|number:'1.2-2'}}</td>
+                                                    <td>₹{{product.TotalDiscountAmount|number:'1.2-2'}}</td>
+                                                    <td>₹{{product.TotalTaxAmount|number:'1.2-2'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                        class="my-pagination" *ngIf="reportData.ProductWiseSales.length > 0">
+                                    </pagination-controls>
+                                </div>
+
+                                <div *ngIf="selectedTab === 'directproducts'" class="tab-content mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-sm" #directProductsTable>
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Product Name</th>
+                                                    <th>Quantity Sold</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Discount</th>
+                                                    <th>Tax Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let p of reportData.DirectSellProductDetails; let i = index">
+                                                    <td>{{ i + 1 }}</td>
+                                                    <td>{{ p.ProductName }}</td>
+                                                    <td>{{ p.TotalQuantitySold }}</td>
+                                                    <td>₹{{ p.TotalSalesAmount | number:'1.2-2' }}</td>
+                                                    <td>₹{{ p.TotalDiscountAmount | number:'1.2-2' }}</td>
+                                                    <td>₹{{ p.TotalTaxAmount | number:'1.2-2' }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                                <!-- Daily Wise Tab -->
+                                <div *ngIf="selectedTab === 'daily'" class="tab-content mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-sm" #dailyTable>
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Date</th>
+                                                    <th>No. of Sales</th>
+                                                    <th>Normal Sales</th>
+                                                    <th>Direct Sales</th>
+                                                    <th>Total Quantity</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Net Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let daily of reportData.DailyWiseSales|paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index">
+                                                    <td>{{(itemPerPage * (p -1)) + i + 1}}</td>
+                                                    <td>{{daily.SaleDate|date:'dd-MM-yyyy'}}</td>
+                                                    <td>{{daily.NoOfSales}}</td>
+                                                    <td><span class="badge bg-primary">{{daily.NormalSales}}</span></td>
+                                                    <td><span class="badge bg-success">{{daily.DirectSales}}</span></td>
+                                                    <td>{{daily.TotalQuantity}}</td>
+                                                    <td>₹{{daily.TotalAmount|number:'1.2-2'}}</td>
+                                                    <td>₹{{daily.NetAmount|number:'1.2-2'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                        class="my-pagination">
+                                    </pagination-controls>
+                                </div>
+
+                                <!-- Category Wise Tab -->
+                                <div *ngIf="selectedTab === 'category'" class="tab-content mt-3">
+                                    <div class="alert alert-info" *ngIf="reportData.CategoryWiseSales.length === 0">
+                                        <i class="bi bi-info-circle"></i> No category-wise data available (Direct sells
+                                        don't have category details)
+                                    </div>
+                                    <div class="table-responsive" *ngIf="reportData.CategoryWiseSales.length > 0">
+                                        <table class="table table-bordered table-hover table-sm" #categoryTable>
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Category Name</th>
+                                                    <th>No. of Products</th>
+                                                    <th>Total Quantity</th>
+                                                    <th>Total Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let category of reportData.CategoryWiseSales|paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index">
+                                                    <td>{{(itemPerPage * (p -1)) + i + 1}}</td>
+                                                    <td>{{category.CategoryName}}</td>
+                                                    <td>{{category.NoOfProducts}}</td>
+                                                    <td>{{category.TotalQuantity}}</td>
+                                                    <td>₹{{category.TotalAmount|number:'1.2-2'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                        class="my-pagination" *ngIf="reportData.CategoryWiseSales.length > 0">
+                                    </pagination-controls>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- No Data Message -->
+                        <div *ngIf="!showDetailedReport && !dataLoading" class="alert alert-info mt-4">
+                            <i class="bi bi-info-circle"></i> Please select Shop and Employee, then click "Generate
+                            Report" to view unified sales data.
+                        </div>
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="card-footer text-center" *ngIf="showDetailedReport">
+                        <button type="button" class="btn btn-primary me-2" (click)="exportToExcel()">
+                            <i class="bi bi-file-excel"></i> Export To Excel
+                        </button>
+                        <button type="button" class="btn btn-info" (click)="printReport()">
+                            <i class="bi bi-printer"></i> Print Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

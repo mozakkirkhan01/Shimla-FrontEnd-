@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ShivTextile</string>
+    <string name="title_activity_main">ShivTextile</string>
+    <string name="package_name">com.shivtextile.app</string>
+    <string name="custom_url_scheme">com.shivtextile.app</string>
+</resources>
