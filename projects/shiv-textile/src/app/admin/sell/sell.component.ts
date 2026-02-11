@@ -102,7 +102,10 @@ export class SellComponent implements OnInit {
     this.service.getEmployeeList({ Status: 1 }).subscribe(r1 => {
       let response = r1 as any;
       if (response.Message == ConstantData.SuccessMessage) {
-        this.EmployeeList = response.EmployeeList;
+        this.EmployeeList = response.EmployeeList.sort(
+          (a: any, b: any) =>
+            a.EmployeeName.localeCompare(b.EmployeeName)
+        );
       } else {
         toastr.error(response.Message);
       }
