@@ -42,7 +42,7 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-2">
-                                    <label>User <span class="text-danger">*</span></label>
+                                    <label>User<span class="text-danger">*</span></label>
                                     <select class="form-select" [(ngModel)]="SalesMan.EmployeeId" required>
                                         <option value="">--Select User--</option>
                                         <option [value]="model.EmployeeId" *ngFor="let model of EmployeeList">
@@ -129,9 +129,9 @@
                                                     <th>Selling Amount</th>
                                                     <th>Discount</th>
                                                     <th>Taxable Amount</th>
-                                                    <!-- <th>Tax Amount</th> -->
+                                                    <th>Tax Amount</th>
                                                     <th>Gross Amount</th>
-                                                    <th>Dues</th>
+                                                    <!-- <th>Dues</th> -->
                                                     <th>Avg Sale Value</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -160,16 +160,16 @@
                                                     <td class="text-end">
                                                         ₹{{emp.Summary.TotalDiscountGiven|number:'1.2-2'}}</td>
                                                     <td class="text-end">
-                                                        <strong>₹{{emp.Summary.TotalTaxableAmount|number:'1.2-2'}}</strong>
+                                                        ₹{{emp.Summary.TotalTaxableAmount|number:'1.2-2'}}
                                                     </td>
-                                                    <!-- <td class="text-end">
-                                                        <strong>₹{{emp.Summary.TotalTaxAmount|number:'1.2-2'}}</strong>
-                                                    </td> -->
+                                                    <td class="text-end">
+                                                        ₹{{emp.Summary.TotalTaxAmount|number:'1.2-2'}}
+                                                    </td>
                                                     <td class="text-end">
                                                         <strong>₹{{emp.Summary.TotalNetAmount|number:'1.2-2'}}</strong>
                                                     </td>
-                                                    <td class="text-end text-danger">
-                                                        ₹{{emp.Summary.TotalDuesAmount|number:'1.2-2'}}</td>
+                                                    <!-- <td class="text-end text-danger">
+                                                        ₹{{emp.Summary.TotalDuesAmount|number:'1.2-2'}}</td> -->
                                                     <td class="text-end">
                                                         ₹{{emp.Summary.AverageSaleValue|number:'1.2-2'}}</td>
                                                     <td class="text-center">
