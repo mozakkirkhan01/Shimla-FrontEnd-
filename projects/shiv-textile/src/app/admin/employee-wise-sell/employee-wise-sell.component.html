@@ -126,9 +126,11 @@
                                                     <th>Total Sales</th>
                                                     <th>Normal | Direct</th>
                                                     <th>Quantity Sold</th>
-                                                    <th>Sales Amount</th>
+                                                    <th>Selling Amount</th>
                                                     <th>Discount</th>
-                                                    <th>Net Amount</th>
+                                                    <th>Taxable Amount</th>
+                                                    <!-- <th>Tax Amount</th> -->
+                                                    <th>Gross Amount</th>
                                                     <th>Dues</th>
                                                     <th>Avg Sale Value</th>
                                                     <th>Action</th>
@@ -154,9 +156,15 @@
                                                     </td>
                                                     <td class="text-center">{{emp.Summary.TotalQuantitySold}}</td>
                                                     <td class="text-end">
-                                                        ₹{{emp.Summary.TotalSalesAmount|number:'1.2-2'}}</td>
+                                                        ₹{{emp.Summary.TotalSellingPrice|number:'1.2-2'}}</td>
                                                     <td class="text-end">
                                                         ₹{{emp.Summary.TotalDiscountGiven|number:'1.2-2'}}</td>
+                                                    <td class="text-end">
+                                                        <strong>₹{{emp.Summary.TotalTaxableAmount|number:'1.2-2'}}</strong>
+                                                    </td>
+                                                    <!-- <td class="text-end">
+                                                        <strong>₹{{emp.Summary.TotalTaxAmount|number:'1.2-2'}}</strong>
+                                                    </td> -->
                                                     <td class="text-end">
                                                         <strong>₹{{emp.Summary.TotalNetAmount|number:'1.2-2'}}</strong>
                                                     </td>
