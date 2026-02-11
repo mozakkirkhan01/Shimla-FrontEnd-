@@ -64,6 +64,7 @@ export class DirectSellListComponent implements OnInit {
         this.DirectSell = response.DirectSell;
         this.DirectSellChargeList = response.SellChargeList;
         this.DirectSellProductList = response.DirectSellProductList;
+        
         $('#modal_popUp').modal('show');
       } else {
         toastr.error(response.Message);

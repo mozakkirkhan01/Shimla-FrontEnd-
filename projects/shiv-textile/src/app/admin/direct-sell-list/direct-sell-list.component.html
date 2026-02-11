@@ -173,6 +173,7 @@
                                             <th>SGST</th>
                                             <th>IGST</th>
                                             <th>Gross Amount</th>
+                                            <th>User</th>
                                             <th>Sell Status</th>
                                         </tr>
                                     </thead>
@@ -190,6 +191,7 @@
                                             <td>{{model.SGSTAmount}}</td>
                                             <td>{{model.IGSTAmount}}</td>
                                             <td>{{model.GrossAmount}}</td>
+                                            <td>{{model.EmployeeName}}</td>
                                             <td><span [ngClass]="model.SellingStatus==1?'text-primary':'text-danger'">{{model.SellingStatus==1?"Sold":"Return"}}</span></td>
                                         </tr>
                                     </tbody>
