@@ -195,18 +195,24 @@
                                                     </th>
                                                     <th class="text-center">
                                                         {{shopWiseReport.ShopSummary.TotalQuantitySold}}</th>
-                                                    <th class="text-end">
-                                                        ₹{{shopWiseReport.ShopSummary.TotalSalesAmount|number:'1.2-2'}}
-                                                    </th>
-                                                    <th class="text-end">
-                                                        ₹{{shopWiseReport.ShopSummary.TotalDiscountGiven|number:'1.2-2'}}
-                                                    </th>
+                                                        <th class="text-end">
+                                                            ₹{{shopWiseReport.ShopSummary.TotalSellingPrice|number:'1.2-2'}}
+                                                        </th>
+                                                        <th class="text-end">
+                                                            ₹{{shopWiseReport.ShopSummary.TotalDiscountGiven|number:'1.2-2'}}
+                                                        </th>
+                                                        <th class="text-end">
+                                                            ₹{{shopWiseReport.ShopSummary.TotalTaxableAmount|number:'1.2-2'}}
+                                                        </th>
+                                                        <th class="text-end">
+                                                            ₹{{shopWiseReport.ShopSummary.TotalTaxAmount|number:'1.2-2'}}
+                                                        </th>
                                                     <th class="text-end">
                                                         <strong>₹{{shopWiseReport.ShopSummary.TotalNetAmount|number:'1.2-2'}}</strong>
                                                     </th>
-                                                    <th class="text-end text-danger">
+                                                    <!-- <th class="text-end text-danger">
                                                         ₹{{shopWiseReport.ShopSummary.TotalDuesAmount|number:'1.2-2'}}
-                                                    </th>
+                                                    </th> -->
                                                     <th colspan="2"></th>
                                                 </tr>
                                             </tfoot>

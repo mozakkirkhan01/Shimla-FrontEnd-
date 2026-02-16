@@ -280,8 +280,7 @@ export class EmployeeWiseSellComponent implements OnInit {
   // Add new properties
 shopWiseReport: any = null;
 showShopWiseReport: boolean = false;
-
-// Modify the getEmployeeSalesReport method
+  // Modify the getEmployeeSalesReport method
 getEmployeeSalesReport() {
   if (!this.SalesMan.ShopId) {
     toastr.error('Please select Shop');
@@ -348,7 +347,6 @@ getEmployeeSalesReport() {
     );
   }
 }
-
 // Add method to view individual employee details
 viewEmployeeDetails(employeeId: number) {
   this.SalesMan.EmployeeId = employeeId;
