@@ -77,7 +77,7 @@
                                     </thead>
                                     <tbody>
                                         <tr
-                                            *ngFor="let model of SellList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            *ngFor="let model of (SellList | orderBy:sortKey:reverse | paginate: { itemsPerPage: itemPerPage, currentPage: p }); let i = index">
                                             <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary" (click)="printInvoice(model)">Print</button>
