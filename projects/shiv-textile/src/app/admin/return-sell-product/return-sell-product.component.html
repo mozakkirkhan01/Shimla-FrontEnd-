@@ -26,10 +26,8 @@
 
                                 <div class="col-lg-3 form-group">
                                     <label class="form-label">Enter Bill No.<span class="text-danger">*</span></label>
-                                    <input type="number" placeholder="BIll No."
-                                                    #InvoiceNo="ngModel"
-                                                    [(ngModel)]="Bill.InvoiceNo"
-                                                    name="InvoiceNo" class="form-control">
+                                    <input type="number" placeholder="BIll No." #InvoiceNo="ngModel"
+                                        [(ngModel)]="Bill.InvoiceNo" name="InvoiceNo" class="form-control">
                                     <!-- <ng-autocomplete [data]="SellList" [searchKeyword]="'InvoiceNo'"
                                         placeholder="Enter Bill No." [itemTemplate]="ItemTemplate"
                                         [notFoundTemplate]="productNotFoundTemplate" (inputCleared)="clearCustomer()"
@@ -68,7 +66,7 @@
                                 </div> -->
                             </div>
 
-                            
+
                             <div class="list-group">
                                 <a class="list-group-item list-group-item-action active" aria-current="true">
                                     Products
@@ -97,6 +95,7 @@
                                                         <th>SGST</th>
                                                         <th>IGST</th>
                                                         <th>Gross Amount</th>
+                                                        <th>User</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
@@ -123,6 +122,9 @@
                                                         <td>{{model.SGSTAmount}}</td>
                                                         <td>{{model.IGSTAmount}}</td>
                                                         <td>{{model.GrossAmount}}</td>
+                                                        <td>{{model.EmployeeName}}</td>
+
+
                                                         <!-- <td
                                                             ng-class="model.SellingStatus==1?'text-primary':'text-danger'">
                                                             {{model.SellingStatus==1?'SOLD':'RETURN'}}</td> -->
@@ -135,7 +137,7 @@
                                         </div>
                                     </div>
 
-                                    
+
                                 </a>
 
 
@@ -178,7 +180,8 @@
                                             <td>
                                                 <!-- {{model.Quantity}} -->
                                                 <input type="text" class="input_money"
-                                                [(ngModel)]="model.ReturnQuantity" (change)="changeReturnSellingPrice(model)">
+                                                    [(ngModel)]="model.ReturnQuantity"
+                                                    (change)="changeReturnSellingPrice(model)">
                                             </td>
                                             <td>{{model.UnitName}}</td>
                                             <td>{{model.DiscountPercentage}}</td>
@@ -192,12 +195,10 @@
                                             <!-- <td
                                                 ng-class="model.SellingStatus==1?'text-primary':'text-danger'">
                                                 {{model.SellingStatus==1?'SOLD':'RETURN'}}</td> -->
-                                            <td
-                                                [ngClass]="model.SellingStatus==1?'text-primary':'text-danger'">
+                                            <td [ngClass]="model.SellingStatus==1?'text-primary':'text-danger'">
                                                 {{model.SellingStatus==1?'SOLD':'RETURN'}}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-danger"
-                                                    (click)="removeRetutnList(i)"><i
+                                                <button class="btn btn-sm btn-danger" (click)="removeRetutnList(i)"><i
                                                         class="bi bi-trash-fill"></i></button>
                                             </td>
                                         </tr>
@@ -216,46 +217,48 @@
                                     <form #formProduct="ngForm" #formProductElement>
                                         <div class="row">
                                             <div class="col-lg-4 form-group">
-                                            <label class="form-label">Product <span class="text-danger">*</span></label>
-                                            <ng-autocomplete id="productAutoComplete" [data]="ProductStockList"
-                                                [searchKeyword]="'SearchProduct'" placeholder="Enter Stock Code"
-                                                name="productAutoComplete" [itemTemplate]="productItemTemplate"
-                                                [notFoundTemplate]="productNotFoundTemplate"
-                                                (inputChanged)="changeProductInput($event, formProduct)"
-                                                [(ngModel)]="SellProduct.productAutoComplete"
-                                                [isLoading]="loadingProductStock" (inputCleared)="clearProductStock()"
-                                                (selected)="afterProductStockSelected($event)" [minQueryLength]="1"
-                                                required="required" [autofocus]="SellProduct.SellProduct">
-                                            </ng-autocomplete>
+                                                <label class="form-label">Product <span
+                                                        class="text-danger">*</span></label>
+                                                <ng-autocomplete id="productAutoComplete" [data]="ProductStockList"
+                                                    [searchKeyword]="'SearchProduct'" placeholder="Enter Stock Code"
+                                                    name="productAutoComplete" [itemTemplate]="productItemTemplate"
+                                                    [notFoundTemplate]="productNotFoundTemplate"
+                                                    (inputChanged)="changeProductInput($event, formProduct)"
+                                                    [(ngModel)]="SellProduct.productAutoComplete"
+                                                    [isLoading]="loadingProductStock"
+                                                    (inputCleared)="clearProductStock()"
+                                                    (selected)="afterProductStockSelected($event)" [minQueryLength]="1"
+                                                    required="required" [autofocus]="SellProduct.SellProduct">
+                                                </ng-autocomplete>
 
-                                            <ng-template #productItemTemplate let-item>
-                                                <a [innerHTML]="item.SearchProduct"></a>
-                                            </ng-template>
+                                                <ng-template #productItemTemplate let-item>
+                                                    <a [innerHTML]="item.SearchProduct"></a>
+                                                </ng-template>
 
-                                            <ng-template #productNotFoundTemplate let-notFound>
-                                                <div [innerHTML]="notFound"></div>
-                                            </ng-template>
+                                                <ng-template #productNotFoundTemplate let-notFound>
+                                                    <div [innerHTML]="notFound"></div>
+                                                </ng-template>
 
 
-                                            <ng-template #productItemTemplate let-item>
-                                                <a [innerHTML]="item.SearchProduct"></a>
-                                            </ng-template>
+                                                <ng-template #productItemTemplate let-item>
+                                                    <a [innerHTML]="item.SearchProduct"></a>
+                                                </ng-template>
 
-                                            <ng-template #productNotFoundTemplate let-notFound>
-                                                <div [innerHTML]="notFound">
+                                                <ng-template #productNotFoundTemplate let-notFound>
+                                                    <div [innerHTML]="notFound">
+                                                    </div>
+                                                </ng-template>
+                                                <div class="text-success" *ngIf="SellProduct.ProductStockId">
+                                                    <b>Avl. Qty.: {{SellProduct.AvailableQuantity}}
+                                                        {{SellProduct.UnitName}}</b>
                                                 </div>
-                                            </ng-template>
-                                            <div class="text-success" *ngIf="SellProduct.ProductStockId">
-                                                <b>Avl. Qty.: {{SellProduct.AvailableQuantity}}
-                                                    {{SellProduct.UnitName}}</b>
-                                            </div>
-                                            <!-- <div *ngIf="productAutoComplete.invalid && (productAutoComplete.dirty || productAutoComplete.touched || isProductSubmitted)"
+                                                <!-- <div *ngIf="productAutoComplete.invalid && (productAutoComplete.dirty || productAutoComplete.touched || isProductSubmitted)"
                                                 class="text-danger">
                                                 <div *ngIf="productAutoComplete.errors?.['required']">
                                                     Product is required.
                                                 </div>
                                             </div> -->
-                                        </div>
+                                            </div>
                                             <div class="col-lg-1 form-group">
                                                 <label class="form-label">MRP </label>
                                                 <input type="text" disabled="disabled" [value]="SellProduct.MRP"
@@ -373,6 +376,7 @@
                                                         <th>SGST</th>
                                                         <th>IGST</th>
                                                         <th>Gross Amount</th>
+                                                        <th>User</th>
                                                         <th>Delete</th>
                                                     </tr>
                                                 </thead>
@@ -416,6 +420,20 @@
                                                         <td>{{model.SGSTAmount}}</td>
                                                         <td>{{model.IGSTAmount}}</td>
                                                         <td>{{model.GrossAmount}}</td>
+                                                        <td>
+                                                            <select class="form-select input_money"
+                                                                [(ngModel)]="model.EmployeeId"
+                                                                [name]="'productUser' + i" required>
+
+                                                                <option value="">--Select--</option>
+
+                                                                <option [value]="emp.EmployeeId"
+                                                                    *ngFor="let emp of EmployeeList">
+                                                                    {{ emp.EmployeeName }}
+                                                                </option>
+
+                                                            </select>
+                                                        </td>
                                                         <td>
                                                             <button class="btn btn-sm btn-danger"
                                                                 (click)="removeData(SellProductList,i)"><i
@@ -539,9 +557,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                    <div class="row">
-                        <h6>Are you sure want to <b>Return Amount</b>. !!!!!</h6>
-                    </div>
+                <div class="row">
+                    <h6>Are you sure want to <b>Return Amount</b>. !!!!!</h6>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

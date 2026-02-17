@@ -47,7 +47,7 @@ export class ReturnSellProductComponent implements OnInit {
     this.employeeDetail = this.localService.getEmployeeDetail();
     this.Sell.EmployeeId = 1002
   }
-   loadingProductStock: boolean = false;
+  loadingProductStock: boolean = false;
 
   ReturnProduct: any = {};
   addReturnList(productModel: any) {
@@ -142,15 +142,15 @@ export class ReturnSellProductComponent implements OnInit {
       this.saveNewSellItem(form);
     }
   }
-searchTimeout: any;
-changeProductInput(event: any, form: NgForm) {
-  clearTimeout(this.searchTimeout);
-  const searchText = event?.target?.value || event;
+  searchTimeout: any;
+  changeProductInput(event: any, form: NgForm) {
+    clearTimeout(this.searchTimeout);
+    const searchText = event?.target?.value || event;
 
-  this.searchTimeout = setTimeout(() => {
-    this.getProductStockDetailList(searchText, form);
-  }, 300); // debounce delay
-}
+    this.searchTimeout = setTimeout(() => {
+      this.getProductStockDetailList(searchText, form);
+    }, 300); // debounce delay
+  }
 
 
 
@@ -210,7 +210,9 @@ changeProductInput(event: any, form: NgForm) {
       IGSTAmount: this.SellProduct.IGSTAmount,
       GrossAmount: this.SellProduct.GrossAmount,
       ShopId: this.SellProduct.ShopId,
-      CategoryName: this.SellProduct.CategoryName
+      CategoryName: this.SellProduct.CategoryName,
+      EmployeeId: this.employeeDetail.EmployeeId
+
     }
     this.SellProductList.push(obj);
     this.resetSellProduct();
@@ -437,30 +439,30 @@ changeProductInput(event: any, form: NgForm) {
   // }
   getProductStockDetailList(searchText: string = "", form?: NgForm) {
     this.loadingProductStock = true;
-  
+
     const obj = {
       SearchProduct: searchText,
       Status: 1
     };
-  
+
     this.service.getProductStockDetailList(obj).subscribe(r1 => {
       const response = r1 as any;
-  
+
       if (response.Message === ConstantData.SuccessMessage) {
         this.ProductStockList = response.ProductStockList;
-  
+
         this.ProductStockList.map(c1 => {
           c1.SearchProduct = `${c1.StockCode} - ${c1.ProductName} - ${c1.SizeName} - ${c1.HSNCode}`;
         });
-  
 
-        
-  
+
+
+
       } else {
         toastr.error(response.Message);
         this.ProductStockList = [];
       }
-  
+
       this.loadingProductStock = false;
     }, err => {
       toastr.error("Error occurred while fetching product stock.");
