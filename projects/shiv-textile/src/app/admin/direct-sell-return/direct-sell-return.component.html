@@ -306,6 +306,7 @@
                                                         <th>SGST</th>
                                                         <th>IGST</th>
                                                         <th>Gross Amount</th>
+                                                        <th>User</th>
                                                         <th>Delete</th>
                                                     </tr>
                                                 </thead>
@@ -346,6 +347,20 @@
                                                         <td>{{model.SGSTAmount}}</td>
                                                         <td>{{model.IGSTAmount}}</td>
                                                         <td>{{model.GrossAmount}}</td>
+                                                                                                                <td>
+                                                            <select class="form-select input_money"
+                                                                [(ngModel)]="model.EmployeeId"
+                                                                [name]="'productUser' + i" required>
+
+                                                                <option value="">--Select--</option>
+
+                                                                <option [value]="emp.EmployeeId"
+                                                                    *ngFor="let emp of EmployeeList">
+                                                                    {{ emp.EmployeeName }}
+                                                                </option>
+
+                                                            </select>
+                                                        </td>
                                                         <td>
                                                             <button class="btn btn-sm btn-danger"
                                                                 (click)="removeData(SellProductList,i)"><i

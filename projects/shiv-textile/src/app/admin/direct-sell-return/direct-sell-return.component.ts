@@ -206,6 +206,8 @@ export class DirectSellReturnComponent implements OnInit {
       SGSTAmount: this.SellProduct.SGSTAmount,
       IGSTAmount: this.SellProduct.IGSTAmount,
       GrossAmount: this.SellProduct.GrossAmount,
+      EmployeeId: this.employeeDetail.EmployeeId
+
     }
     this.SellProductList.push(obj);
     this.resetSellProduct();
