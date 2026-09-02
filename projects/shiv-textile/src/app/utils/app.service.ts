@@ -8,17 +8,20 @@ import { ProductStockResponse } from './interface';
   providedIn: 'root'
 })
 export class AppService {
-  public readonly baseUrl: string = "http://localhost:3776/";
+   public readonly baseUrl: string = "http://localhost:3776/";
+  // public readonly baseUrl: string = "http://localhost:2222/";
+ //public readonly baseUrl: string = "https://shivapi.webaikon.in";
 
 
   constructor(private http: HttpClient) {
 
-    this.baseUrl = "http://localhost:3776/";  
-    //this.baseUrl = "https://api.shivtextilechas.in/";
+     this.baseUrl = "http://localhost:3776/";  
+    // this.baseUrl = "http://localhost:2222/";  
+    // this.baseUrl = "https://api.shivtextilechas.in/";
+    //this.baseUrl = "https://shivapi.webaikon.in/";
     // this.baseUrl = "https://api.winnexcode.in/";
 
   }
-
 
   getSellProductStockList(searchTerm: string): Observable<any[]> {
     const url = `${this.baseUrl}api/sellProductStock/GetProductStockList?searchTerm=${searchTerm}`;
