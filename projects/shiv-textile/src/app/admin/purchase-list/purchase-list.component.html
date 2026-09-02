@@ -41,6 +41,22 @@
                                     disabled="disabled" [(ngModel)]="Shop.Address" name="Address"
                                     class="form-control">
                             </div>
+                            <div class="col-sm-3 form-group">
+                                <label class="form-label">Year</label>
+                                <select class="form-select" #Year="ngModel" [(ngModel)]="SelectedYear"
+                                    (change)="applyFilters()" name="Year">
+                                    <option value="">--All Years--</option>
+                                    <option [value]="y" *ngFor="let y of YearList">{{y}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label class="form-label">Month</label>
+                                <select class="form-select" #Month="ngModel" [(ngModel)]="SelectedMonth"
+                                    (change)="applyFilters()" name="Month">
+                                    <option value="">--All Months--</option>
+                                    <option [value]="m.value" *ngFor="let m of MonthList">{{m.name}}</option>
+                                </select>
+                            </div>
                             <div class="dataTable-top">
                                 <div class="dataTable-dropdown">
                                     <select class="dataTable-selector form-select form-select-sm"
