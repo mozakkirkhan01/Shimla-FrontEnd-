@@ -8,14 +8,14 @@ import { ProductStockResponse } from './interface';
   providedIn: 'root'
 })
 export class AppService {
-   public readonly baseUrl: string = "http://localhost:3776/";
+  public readonly baseUrl: string = "http://localhost:3776/";
   // public readonly baseUrl: string = "http://localhost:2222/";
- //public readonly baseUrl: string = "https://shivapi.webaikon.in";
+  //public readonly baseUrl: string = "https://shivapi.webaikon.in";
 
 
   constructor(private http: HttpClient) {
 
-     this.baseUrl = "http://localhost:3776/";  
+    this.baseUrl = "http://localhost:3776/";
     // this.baseUrl = "http://localhost:2222/";  
     // this.baseUrl = "https://api.shivtextilechas.in/";
     //this.baseUrl = "https://shivapi.webaikon.in/";
@@ -194,10 +194,10 @@ export class AppService {
     return this.http.post(this.baseUrl + '/api/ProductStock/OnlyProductStockListStockHistory', obj)
   }
 
-   getOnlyProductStockList(obj: any) {
+  getOnlyProductStockList(obj: any) {
     return this.http.post(this.baseUrl + '/api/ProductStock/OnlyProductStockList', obj)
   }
-   getSupplierProductDetails(obj: any) {
+  getSupplierProductDetails(obj: any) {
     return this.http.post(this.baseUrl + '/api/ProductStock/SupplierProductDetails', obj)
   }
   getProductStockList(obj: any) {
@@ -224,7 +224,7 @@ export class AppService {
     const url = `${this.baseUrl}/api/ProductStock/GetProductStockList?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     return this.http.get<ProductStockResponse>(url);
   }
-  
+
 
   getProductStockDetail(obj: any) {
     return this.http.post(this.baseUrl + '/api/ProductStock/ProductStockDetail', obj)
@@ -251,8 +251,8 @@ export class AppService {
     return this.http.post(this.baseUrl + '/api/supplierPayment/SupplierPaymentList', obj)
   }
   getSupplierGRHistory(obj: any) {
-  return this.http.post(this.baseUrl + '/api/supplierPayment/SupplierGRHistory', obj)
-}
+    return this.http.post(this.baseUrl + '/api/supplierPayment/SupplierGRHistory', obj)
+  }
 
   //Sell
   saveReturnProduct(data: any) {
@@ -300,14 +300,14 @@ export class AppService {
   }
 
   getUnifiedEmployeeSalesReport(data: any) {
-  return this.http.post(this.baseUrl + '/api/Sell/getUnifiedEmployeeSalesReport', data);
-}
+    return this.http.post(this.baseUrl + '/api/Sell/getUnifiedEmployeeSalesReport', data);
+  }
 
-getShopWiseEmployeeSalesReport(data: any) {
-  return this.http.post(this.baseUrl + '/api/Sell/getShopWiseEmployeeSalesReport', data);
-}
+  getShopWiseEmployeeSalesReport(data: any) {
+    return this.http.post(this.baseUrl + '/api/Sell/getShopWiseEmployeeSalesReport', data);
+  }
 
-   saveSell(obj: any) {
+  saveSell(obj: any) {
     return this.http.post(this.baseUrl + '/api/Sell/saveSell', obj)
   }
   deleteSell(obj: any) {
@@ -368,10 +368,10 @@ getShopWiseEmployeeSalesReport(data: any) {
     return this.http.post(this.baseUrl + '/api/Product/ProductList', obj)
   }
 
-   getProductListAll(obj: any) {
+  getProductListAll(obj: any) {
     return this.http.post(this.baseUrl + '/api/Product/ProductListAll', obj)
   }
-  
+
   saveProduct(obj: any) {
     return this.http.post(this.baseUrl + '/api/Product/saveProduct', obj)
   }
