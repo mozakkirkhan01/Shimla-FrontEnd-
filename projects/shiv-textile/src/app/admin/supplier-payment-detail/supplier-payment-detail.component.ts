@@ -31,6 +31,8 @@ export class SupplierPaymentDetailComponent implements OnInit {
   pageSize = ConstantData.PageSizes;
   itemPerPage: number = this.pageSize[0];
   SupplierPaymentHistory: any = [];
+  SupplierGRHistory: any[] = [];
+  grTotal: any = {};
 
   constructor(
     private service: AppService,
@@ -53,6 +55,10 @@ export class SupplierPaymentDetailComponent implements OnInit {
     this.SelectedSupplier.ContactPersonName = null;
     this.SelectedSupplier.MobileNo = null;
     this.SelectedSupplier.GSTNo = null;
+    this.SupplierPaymentHistory = [];
+    this.SupplierGRHistory = [];
+    this.paymentTotal = {};
+    this.grTotal = {};
   }
 
   onTableDataChange(p: any) {
@@ -68,10 +74,15 @@ export class SupplierPaymentDetailComponent implements OnInit {
     this.Purchase.SupplierId = item.SupplierId;
     this.SelectedSupplier = item;
     this.getSupplierPaymentHistory();
+    this.getSupplierGRHistory();
   }
 
   clearSupplier() {
     this.Purchase.SupplierId = null;
+    this.SupplierPaymentHistory = [];
+    this.SupplierGRHistory = [];
+    this.paymentTotal = {};
+    this.grTotal = {};
   }
 
   paymentTotal: any = {};
@@ -92,6 +103,7 @@ export class SupplierPaymentDetailComponent implements OnInit {
           this.paymentTotal.grandPaidAmount += e1.PaidAmount;
           this.paymentTotal.FinalAmount = this.paymentTotal.grandTotalAmount - this.paymentTotal.grandPaidAmount;
         });
+        this.calculateBalance();
       } else {
         toastr.error(response.Message);
       }
@@ -100,6 +112,47 @@ export class SupplierPaymentDetailComponent implements OnInit {
       toastr.error("Error Occured while fetching data.");
       this.dataLoading = false;
     }));
+  }
+
+  // GR (Goods Return) history for the selected supplier: how much stock/amount
+  // has been returned back to them.
+  getSupplierGRHistory() {
+    this.grTotal.TotalQuantity = 0;
+    this.grTotal.TotalTaxableAmount = 0;
+    this.grTotal.TotalGSTAmount = 0;
+    this.grTotal.TotalAmount = 0;
+    this.dataLoading = true;
+    var obj = {
+      SupplierId: this.Purchase.SupplierId
+    }
+    this.service.getSupplierGRHistory(obj).subscribe(r1 => {
+      let response = r1 as any;
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.SupplierGRHistory = response.SupplierGRHistory;
+        this.SupplierGRHistory.forEach((e1: any) => {
+          this.grTotal.TotalQuantity += e1.TotalQuantity;
+          this.grTotal.TotalTaxableAmount += e1.TotalTaxableAmount;
+          this.grTotal.TotalGSTAmount += e1.TotalGSTAmount;
+          this.grTotal.TotalAmount += e1.TotalAmount;
+        });
+        this.calculateBalance();
+      } else {
+        toastr.error(response.Message);
+      }
+      this.dataLoading = false;
+    }, (err => {
+      toastr.error("Error Occured while fetching data.");
+      this.dataLoading = false;
+    }));
+  }
+
+  // Balance Due = Total Billed - Total Paid - Total Returned (GR).
+  // Safe to call after either fetch resolves, independent of order.
+  calculateBalance() {
+    const totalBill = this.paymentTotal.grandTotalAmount || 0;
+    const totalPaid = this.paymentTotal.grandPaidAmount || 0;
+    const totalReturned = this.grTotal.TotalAmount || 0;
+    this.paymentTotal.BalanceAmount = totalBill - totalPaid - totalReturned;
   }
 
   getSupplierPaymentList() {
