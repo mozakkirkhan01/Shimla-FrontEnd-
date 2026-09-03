@@ -250,6 +250,9 @@ export class AppService {
   getSupplierPaymentList(obj: any) {
     return this.http.post(this.baseUrl + '/api/supplierPayment/SupplierPaymentList', obj)
   }
+  getSupplierGRHistory(obj: any) {
+  return this.http.post(this.baseUrl + '/api/supplierPayment/SupplierGRHistory', obj)
+}
 
   //Sell
   saveReturnProduct(data: any) {
