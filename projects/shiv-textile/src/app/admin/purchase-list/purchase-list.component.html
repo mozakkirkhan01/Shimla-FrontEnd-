@@ -25,7 +25,7 @@
 
                         <div class="row">
 
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-2 form-group">
                                 <label class="form-label">Select Shop <span class="text-danger">*</span></label>
                                 <select class="form-select" #ShopId="ngModel" [(ngModel)]="Shop.ShopId" (change)="getPurchaseList()"
                                     name="ShopId" >
@@ -42,6 +42,15 @@
                                     class="form-control">
                             </div>
                             <div class="col-sm-3 form-group">
+                                <label class="form-label">Supplier</label>
+                                <select class="form-select" #Supplier="ngModel" [(ngModel)]="SelectedSupplier"
+                                    (change)="applyFilters()" name="Supplier">
+                                    <option value="">--All Suppliers--</option>
+                                    <option [value]="model.SupplierId" *ngFor="let model of SupplierList">
+                                        {{model.CompanyName}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-group">
                                 <label class="form-label">Year</label>
                                 <select class="form-select" #Year="ngModel" [(ngModel)]="SelectedYear"
                                     (change)="applyFilters()" name="Year">
@@ -49,7 +58,7 @@
                                     <option [value]="y" *ngFor="let y of YearList">{{y}}</option>
                                 </select>
                             </div>
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-2 form-group">
                                 <label class="form-label">Month</label>
                                 <select class="form-select" #Month="ngModel" [(ngModel)]="SelectedMonth"
                                     (change)="applyFilters()" name="Month">

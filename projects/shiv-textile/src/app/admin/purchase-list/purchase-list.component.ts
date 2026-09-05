@@ -30,8 +30,12 @@ export class PurchaseListComponent implements OnInit {
   SelectedMonth: any = '';
   YearList: number[] = [];
   MonthList = ConstantData.MonthList;
-  // Holds the unfiltered list returned from the API (before Year/Month filtering)
+  // Holds the unfiltered list returned from the API (before Year/Month/Supplier filtering)
   PurchaseListFull: any[] = [];
+
+  // Supplier filter
+  SupplierList: any = [];
+  SelectedSupplier: any = '';
 
   constructor(
     private service: AppService,
@@ -42,6 +46,7 @@ export class PurchaseListComponent implements OnInit {
   ngOnInit(): void {
     this.generateYearList();
     this.getShopList();
+    this.getAllSupplierList();
     this.getPurchaseList();
     this.employeeDetail = this.localService.getEmployeeDetail();
     this.Shop.ShopId = "";
@@ -62,6 +67,23 @@ export class PurchaseListComponent implements OnInit {
       let response = r1 as any;
       if (response.Message == ConstantData.SuccessMessage) {
         this.ShopList = response.ShopList;
+      } else {
+        toastr.error(response.Message);
+      }
+      this.dataLoading = false;
+    }, (err => {
+      toastr.error("Error Occured while fetching data.");
+      this.dataLoading = false;
+    }));
+  }
+
+  // Populates the Supplier filter dropdown
+  getAllSupplierList() {
+    this.dataLoading = true;
+    this.service.getAllSupplierList({}).subscribe(r1 => {
+      let response = r1 as any;
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.SupplierList = response.SupplierList;
       } else {
         toastr.error(response.Message);
       }
@@ -145,7 +167,7 @@ export class PurchaseListComponent implements OnInit {
     }));
   }
 
-  // Applies the Year/Month filter (client-side) on top of the full list
+  // Applies the Year/Month/Supplier filters (client-side) on top of the full list
   // fetched for the selected shop, and recalculates the footer totals.
   applyFilters() {
     let filtered = this.PurchaseListFull || [];
@@ -162,6 +184,10 @@ export class PurchaseListComponent implements OnInit {
         const d = new Date(e.InvoiceDate);
         return (d.getMonth() + 1) === +this.SelectedMonth;
       });
+    }
+
+    if (this.SelectedSupplier) {
+      filtered = filtered.filter((e: any) => e.SupplierId == this.SelectedSupplier);
     }
 
     this.PurchaseList = filtered;
