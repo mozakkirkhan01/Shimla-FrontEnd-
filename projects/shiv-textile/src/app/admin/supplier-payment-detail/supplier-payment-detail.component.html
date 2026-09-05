@@ -237,7 +237,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <div class="card border-0 shadow-sm h-100">
                                 <div class="card-body">
                                     <div class="text-muted small mb-1">Total Paid Amount</div>
@@ -245,12 +245,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-3">
                             <div class="card border-0 shadow-sm h-100">
                                 <div class="card-body">
                                     <div class="text-muted small mb-1">Total Returned (GR)</div>
-                                    <div class="fs-5 fw-bold text-warning">{{ grTotal.TotalAmount | number }}</div>
+                                    <div class="fs-3 fw-bold text-warning">{{ grTotal.TotalAmount | number }}</div>
                                 </div>
                             </div>
                         </div>
@@ -258,9 +258,9 @@
                             <div class="card border-0 shadow-sm h-100"
                                 [ngClass]="paymentTotal.BalanceAmount > 0 ? 'border-start border-4 border-danger' : 'border-start border-4 border-success'">
                                 <div class="card-body">
-                                    <div class="text-muted small mb-1">Balance Due</div>
-                                    <div class="fs-1 fw-bold"
-                                        [ngClass]="paymentTotal.BalanceAmount > 0 ? 'text-danger' : 'text-success'">
+                                    <div class="text-muted small mb-1">Total Paid Amount</div>
+                                    <div class="fs-4 fw-bold"
+                                        [ngClass]="paymentTotal.BalanceAmount > 0 ? 'text-success' : 'text-danger'">
                                         {{ paymentTotal.BalanceAmount | number }}
                                     </div>
                                 </div>
