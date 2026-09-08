@@ -48,6 +48,7 @@
                                         <th style="cursor: pointer;" (click)="sort('StatusName')">Email</th>
                                         <th style="cursor: pointer;" (click)="sort('StatusName')">Full Address</th>
                                         <th style="cursor: pointer;" (click)="sort('StatusName')">Status</th>
+                                        <th>View</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </thead>
@@ -64,6 +65,12 @@
                                             <td>{{model.FullAddress}}</td>
                                             <td><span [ngClass]="model.Status == 2 ?'badge bg-warning':'badge bg-success'">
                                                     {{model.StatusName}}</span></td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-info" title="View Supplier"
+                                                    aria-label="View supplier details" (click)="viewSupplier(model)">
+                                                    <i class="bi bi-eye" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
                                             <td>
                                                 <button class="btn btn-sm btn-warning" (click)="editSupplier(model)"><i
                                                         class="bi bi-pencil-square"></i> </button>
@@ -92,11 +99,64 @@
     </section>
 </main>
 
+<div id="modal_supplierView" class="modal fade" tabindex="-1" aria-labelledby="supplierViewTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="supplierViewTitle" class="modal-title">Supplier Details</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-break">
+                <h6>Company &amp; Contact Details</h6>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Supplier ID</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.SupplierId || '-'}}</dd>
+                    <dt class="col-sm-4">Company Name</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.CompanyName || '-'}}</dd>
+                    <dt class="col-sm-4">Contact Person Name</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.ContactPersonName || '-'}}</dd>
+                    <dt class="col-sm-4">GST No</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.GSTNo || '-'}}</dd>
+                    <dt class="col-sm-4">State Code</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.StateCode || '-'}}</dd>
+                    <dt class="col-sm-4">Mobile No</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.MobileNo || '-'}}</dd>
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.Email || '-'}}</dd>
+                    <dt class="col-sm-4">Full Address</dt>
+                    <dd class="col-sm-8" style="white-space: pre-line;">{{viewedSupplier.FullAddress || '-'}}</dd>
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8"><span [ngClass]="viewedSupplier.Status == 2 ? 'badge bg-warning' : 'badge bg-success'">
+                        {{viewedSupplier.StatusName || '-'}}</span></dd>
+                    <dt class="col-sm-4">Updated Date</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.UpdatedDate ? (viewedSupplier.UpdatedDate | date:'dd-MMM-yyyy h:mm a') : '-'}}</dd>
+                </dl>
+                <h6 class="border-top pt-3 mt-3">Company's Bank Details</h6>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Account Holder Name</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.AccountHolderName || '-'}}</dd>
+                    <dt class="col-sm-4">Bank Name</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.BankName || '-'}}</dd>
+                    <dt class="col-sm-4">Account Number</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.AccountNumber || '-'}}</dd>
+                    <dt class="col-sm-4">IFSC Code</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.IFSCCode || '-'}}</dd>
+                    <dt class="col-sm-4">Branch Name</dt>
+                    <dd class="col-sm-8">{{viewedSupplier.BranchName || '-'}}</dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="modal_popUp" class="modal fade">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{Supplier.SupplierId > 0 ? 'Update' : 'New'}} Supplier</h5>
+                <h3 class="modal-title">{{Supplier.SupplierId > 0 ? 'Update' : 'New'}} Supplier</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -178,6 +238,42 @@
                             </div>
                         </div>
                     </div>
+                    <fieldset class="mt-3">
+                        <legend class="h5 border-top pt-3">Company's Bank Details <small class="text-muted">(Optional)</small></legend>
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label for="AccountHolderName" class="form-label">Account Holder Name</label>
+                                <input id="AccountHolderName" type="text" placeholder="Enter Account Holder Name"
+                                    [(ngModel)]="Supplier.AccountHolderName" name="AccountHolderName"
+                                    class="form-control" maxlength="250">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label for="BankName" class="form-label">Bank Name</label>
+                                <input id="BankName" type="text" placeholder="Enter Bank Name"
+                                    [(ngModel)]="Supplier.BankName" name="BankName" class="form-control" maxlength="250">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label for="AccountNumber" class="form-label">Account Number</label>
+                                <input id="AccountNumber" type="text" placeholder="Enter Account Number"
+                                    [(ngModel)]="Supplier.AccountNumber" name="AccountNumber" class="form-control" maxlength="50">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label for="IFSCCode" class="form-label">IFSC Code</label>
+                                <input id="IFSCCode" type="text" placeholder="Enter IFSC Code" #IFSCCode="ngModel"
+                                    [(ngModel)]="Supplier.IFSCCode" name="IFSCCode" class="form-control"
+                                    maxlength="11" pattern="[A-Za-z]{4}0[A-Za-z0-9]{6}"
+                                    [ngClass]="{'is-invalid': IFSCCode.invalid && (IFSCCode.touched || submitted)}">
+                                <div *ngIf="IFSCCode.invalid && (IFSCCode.dirty || IFSCCode.touched || submitted)" class="text-danger">
+                                    Enter a valid 11-character IFSC code (e.g. SBIN0001234).
+                                </div>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label for="BranchName" class="form-label">Branch Name</label>
+                                <input id="BranchName" type="text" placeholder="Enter Branch Name"
+                                    [(ngModel)]="Supplier.BranchName" name="BranchName" class="form-control" maxlength="250">
+                            </div>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
             <div class="modal-footer">

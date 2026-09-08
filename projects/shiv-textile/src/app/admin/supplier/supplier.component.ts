@@ -15,6 +15,7 @@ import { LocalService } from "../../utils/local.service";
 })
 export class SupplierComponent  implements OnInit {
   Supplier: any = {};
+  viewedSupplier: any = {};
   employeeDetail: any;
   StatusList = ConstantData.StatusList;
   SupplierList: any[];
@@ -42,10 +43,9 @@ export class SupplierComponent  implements OnInit {
 
   resetForm(form?: NgForm) {
     this.submitted = false;
-    this.Supplier = {};
-    this.Supplier.Status = "1";
+    this.Supplier = { Status: "1" };
     if (form != null){
-      form.reset();
+      form.resetForm(this.Supplier);
     }
   }
 
@@ -55,12 +55,18 @@ export class SupplierComponent  implements OnInit {
   }
 
   editSupplier(obj: any) {
-    this.Supplier = obj;
+    this.submitted = false;
+    this.Supplier = { ...obj };
     $('#modal_popUp').modal('show');
   }
 
   onTableDataChange(p: any) {
     this.p = p;
+  }
+
+  viewSupplier(obj: any) {
+    this.viewedSupplier = { ...obj };
+    $('#modal_supplierView').modal('show');
   }
 
   sort(key: any) {
@@ -87,7 +93,7 @@ export class SupplierComponent  implements OnInit {
   saveSupplier(form:NgForm) {
     this.submitted = true;
     if (form.invalid) {
-      toastr.warning("Fill all the Required Fields.", "Invailid Form")
+      toastr.warning("Please correct the highlighted fields.", "Invalid Form")
       this.dataLoading = false;
       return;
     }
@@ -129,4 +135,3 @@ export class SupplierComponent  implements OnInit {
   }
 
 }
-
