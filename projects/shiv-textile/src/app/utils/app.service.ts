@@ -342,6 +342,9 @@ export class AppService {
     return this.http.post(this.baseUrl + '/api/Category/deleteCategory', obj)
   }
 
+  getCategoryQuantityReport(obj: any) {
+  return this.http.post(this.baseUrl + '/api/gstReport/CategoryQuantityReport', obj)
+}
   //Customer
   getCustomerList(obj: any) {
     return this.http.post(this.baseUrl + '/api/Customer/CustomerList', obj)
