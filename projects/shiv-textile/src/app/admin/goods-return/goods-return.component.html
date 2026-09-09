@@ -193,6 +193,18 @@
                                                 #GrossAmount="ngModel" [(ngModel)]="SellProduct.GrossAmount"
                                                 name="GrossAmount" class="form-control">
                                         </div>
+                                        <div class="col-lg-2 form-group">
+    <label class="form-label">GR Date <span class="text-danger">*</span></label>
+    <input type="date" placeholder="GR Date" #GRDate="ngModel"
+        [(ngModel)]="Sell.GRDate" name="GRDate" class="form-control"
+        [ngClass]="{'is-invalid':submitted && GRDate.invalid}" required>
+    <div *ngIf="GRDate.invalid && (GRDate.dirty || GRDate.touched || submitted)"
+        class="text-danger">
+        <div *ngIf="GRDate.errors?.['required']">
+            GR Date is required.
+        </div>
+    </div>
+</div>
                                         <div class="col-lg-1 form-group">
                                             <label class="form-label">Add</label>
                                             <br>

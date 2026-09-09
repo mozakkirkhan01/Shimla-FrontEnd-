@@ -551,6 +551,8 @@ export class GoodsReturnComponent implements OnInit {
     this.Sell.CustomerName = "Cash";
     this.Sell.EmployeeId = this.employeeDetail.EmployeeId;
     this.Sell.InvoiceDate = this.loadDataService.loadDateYMDT(new Date());
+    // in resetForm(), alongside the other Sell.* defaults:
+this.Sell.GRDate = this.loadDataService.loadDateYMD(new Date()); // default to today, editable
     this.submitted = false;
     this.SellProductList = [];
     // this.ProductStockDetailForReturn =[];
@@ -564,7 +566,8 @@ export class GoodsReturnComponent implements OnInit {
 
     var obj = {
       goods: this.SellProductList,
-      EmployeeId: this.employeeDetail.EmployeeId
+      EmployeeId: this.employeeDetail.EmployeeId,
+      GRDate: this.Sell.GRDate
     }
     this.dataLoading = true;
     this.service.saveGoodsReturn(obj).subscribe(r1 => {
