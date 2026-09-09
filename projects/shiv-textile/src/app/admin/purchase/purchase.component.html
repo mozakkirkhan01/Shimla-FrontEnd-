@@ -25,48 +25,37 @@
 
                         <form #myForm="ngForm" #myFormElement>
                             <div class="row">
-                                <div class="col-sm-3 form-group" *ngIf="Purchase.PurchaseId == 0">
-                                    <label class="form-label">Supplier <span class="text-danger">*</span></label>
-                                    <ng-autocomplete [data]="SupplierList" [searchKeyword]="'CompanyName'"
-                                        placeholder="Enter Supplier Detail" (selected)='afterSupplierSelected($event)'
-                                        name="supplierAutoComplete" [itemTemplate]="itemTemplate"
-                                        (inputChanged)="changeSupplierText($event)"
-                                        [notFoundTemplate]="notFoundTemplate" #SupplierAutoCompleter="ngModel"
-                                        [(ngModel)]="Purchase.SupplierAutoCompleter" [isLoading]="dataLoading"
-                                        (inputCleared)="clearSupplier()" [minQueryLength]="1" required="required"
-                                        [autofocus]="Purchase.SupplierAutoCompleter">
-                                    </ng-autocomplete>
+                                <div class="col-sm-3 form-group">
+    <label class="form-label">Supplier <span class="text-danger">*</span></label>
+    <ng-autocomplete [data]="SupplierList" [searchKeyword]="'CompanyName'"
+        placeholder="Enter Supplier Detail" (selected)='afterSupplierSelected($event)'
+        name="supplierAutoComplete" [itemTemplate]="itemTemplate"
+        (inputChanged)="changeSupplierText($event)"
+        [notFoundTemplate]="notFoundTemplate" #SupplierAutoCompleter="ngModel"
+        [(ngModel)]="Purchase.SupplierAutoCompleter" [isLoading]="dataLoading"
+        (inputCleared)="clearSupplier()" [minQueryLength]="1" required="required"
+        [autofocus]="Purchase.SupplierAutoCompleter">
+    </ng-autocomplete>
 
-                                    <ng-template #itemTemplate let-item>
-                                        <a [innerHTML]="item.CompanyName"></a>
-                                    </ng-template>
+    <ng-template #itemTemplate let-item>
+        <a [innerHTML]="item.CompanyName"></a>
+    </ng-template>
 
-                                    <ng-template #notFoundTemplate let-notFound>
-                                        <div>
-                                            <a class="new-link" routerLink="/admin/supplier">New Supplier</a>
-                                        </div>
-                                    </ng-template>
-                                    <div *ngIf="SupplierAutoCompleter.invalid && (SupplierAutoCompleter.dirty || SupplierAutoCompleter.touched || submitted)"
-                                        class="text-danger">
-                                        <div *ngIf="SupplierAutoCompleter.errors?.['required']">
-                                            Supplier is required.
-                                        </div>
-                                    </div>
-
-                                    <!-- <select class="form-select" #SupplierId="ngModel" [(ngModel)]="Purchase.SupplierId"
-                                        name="SupplierId" [ngClass]="{'is-invalid':submitted && SupplierId.invalid}"
-                                        required autofocus>
-                                        <option value="">--Select Supplier--</option>
-                                        <option [value]="model.SupplierId" *ngFor="let model of SupplierList">
-                                            {{model.SupplierName}}</option>
-                                    </select>
-                                    <div *ngIf="SupplierId.invalid && (SupplierId.dirty || SupplierId.touched || submitted)"
-                                        class="text-danger">
-                                        <div *ngIf="SupplierId.errors?.['required']">
-                                            Supplier is required.
-                                        </div>
-                                    </div> -->
-                                </div>
+    <ng-template #notFoundTemplate let-notFound>
+        <div>
+            <a class="new-link" routerLink="/admin/supplier">New Supplier</a>
+        </div>
+    </ng-template>
+    <div *ngIf="SupplierAutoCompleter.invalid && (SupplierAutoCompleter.dirty || SupplierAutoCompleter.touched || submitted)"
+        class="text-danger">
+        <div *ngIf="SupplierAutoCompleter.errors?.['required']">
+            Supplier is required.
+        </div>
+    </div>
+    <small *ngIf="Purchase.PurchaseId > 0" class="text-warning">
+        Changing supplier does not recalculate GST on existing product lines — verify manually.
+    </small>
+</div>
 
                                 <div class="col-sm-3 form-group">
                                     <label class="form-label">Select Shop <span class="text-danger">*</span></label>
