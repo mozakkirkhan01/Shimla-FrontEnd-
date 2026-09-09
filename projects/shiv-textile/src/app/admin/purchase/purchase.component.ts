@@ -154,23 +154,20 @@ this.searchInputChanged.next(keyword);
     }));
   }
 
-  setSupplier() {
-    if (this.SupplierList.length > 0) {
-      for (let i1 = 0; i1 < this.SupplierList.length; i1++) {
-        const e1 = this.SupplierList[i1];
-        if (e1.SupplierId == this.Purchase.SupplierId) {
-          this.SelectedSupplier = e1;
-          break;
-        }
+setSupplier() {
+  if (this.SupplierList.length > 0) {
+    for (let i1 = 0; i1 < this.SupplierList.length; i1++) {
+      const e1 = this.SupplierList[i1];
+      if (e1.SupplierId == this.Purchase.SupplierId) {
+        this.SelectedSupplier = e1;
+        this.Purchase.SupplierAutoCompleter = e1.CompanyName;   // added — fixes blank/ID-only display on edit
+        break;
       }
-    } else {
-      setTimeout(() => {
-        this.setSupplier()
-      }, 200);
-
     }
-
+  } else {
+    setTimeout(() => { this.setSupplier() }, 200);
   }
+}
 
   getSupplierList() {
     this.dataLoading = true;
@@ -194,14 +191,17 @@ this.searchInputChanged.next(keyword);
 
   }
 
-  clearSupplier() {
-    this.Purchase.SupplierId = null;
-
+clearSupplier() {
+  this.Purchase.SupplierId = null;
+  if (this.Purchase.PurchaseId == 0) {
     this.ResetList();
-  }
+  };
+}
 
   changeSupplierText(text: any) {
+      if (this.Purchase.PurchaseId == 0) {
     this.ClearPurchaseList();
+  };
   }
 
   getPartyTypeList() {
