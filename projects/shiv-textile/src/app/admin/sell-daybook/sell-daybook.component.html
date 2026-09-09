@@ -50,6 +50,14 @@
                                         disabled="disabled" [(ngModel)]="SalesMan.Address" name="Address"
                                         class="form-control">
                                 </div>
+                                <div class="col-sm-3">
+                                    <label>Category</label>
+                                    <select class="form-select" [(ngModel)]="dailysell.CategoryId" name="CategoryId">
+                                        <option value="">--All Categories--</option>
+                                        <option [value]="model.CategoryId" *ngFor="let model of CategoryList">
+                                            {{model.CategoryName}}</option>
+                                    </select>
+                                </div>
                                 <div class="col-sm-3" style="margin-top: 20px;">
                                     <button (click)="getSellDaybookReport()" class="btn btn-success">Sell</button>
                                 </div>
@@ -78,8 +86,11 @@
                                             <th style="cursor: pointer;" (click)="sort('BillDate')">Date</th>
                                             <th style="cursor: pointer;" (click)="sort('ShopName')">Shop Name</th>
                                             <th style="cursor: pointer;" (click)="sort('Address')">Address</th>
+                                            <th style="cursor: pointer;" (click)="sort('CategoryName')">Category Name
+                                            </th>
                                             <th style="cursor: pointer;" (click)="sort('SellAmount')">Sell Amount</th>
-                                            <th style="cursor: pointer;" (click)="sort('DirectSellAmount')">Direct Sell Amt.</th>
+                                            <th style="cursor: pointer;" (click)="sort('DirectSellAmount')">Direct Sell
+                                                Amt.</th>
                                             <th style="cursor: pointer;" (click)="sort('FinalAmount')">Final Amount</th>
                                         </tr>
                                     </thead>
@@ -90,6 +101,7 @@
                                             <td>{{model.BillDate|date:'dd-MM-yyyy'}}</td>
                                             <td>{{model.ShopName}}</td>
                                             <td>{{model.Address}}</td>
+                                            <td>{{model.CategoryName}}</td>
                                             <td>{{model.SellAmount}}</td>
                                             <td>{{model.DirectSellAmount}}</td>
                                             <td>{{model.FinalAmount}}</td>
@@ -114,6 +126,59 @@
                                 <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
                                     class="my-pagination"></pagination-controls>
                             </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h6>Top 5 Selling Categories (by Quantity)</h6>
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cat of TopCategories">
+                                            <td>{{cat.CategoryName}}</td>
+                                            <td>{{cat.TotalQuantity}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Lowest 5 Selling Categories (by Quantity)</h6>
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let cat of BottomCategories">
+                                            <td>{{cat.CategoryName}}</td>
+                                            <td>{{cat.TotalQuantity}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Lowest 5 Selling Categories (excluding zero-sale)</h6>
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let cat of BottomCategoriesExcludingZero">
+                                        <td>{{cat.CategoryName}}</td>
+                                        <td>{{cat.TotalQuantity}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
                     </div>
