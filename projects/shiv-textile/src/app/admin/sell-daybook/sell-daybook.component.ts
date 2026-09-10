@@ -158,6 +158,7 @@ export class SellDaybookComponent implements OnInit {
     this.SellTotal.SellAmount = 0;
     this.SellTotal.DirectSellAmount = 0;
     this.SellTotal.FinalAmount = 0;
+    this.SellTotal.Quantity = 0;
     this.p = 1;
 
     this.dataLoading = true;
@@ -177,6 +178,7 @@ export class SellDaybookComponent implements OnInit {
           this.SellTotal.SellAmount += e1.SellAmount;
           this.SellTotal.DirectSellAmount += e1.DirectSellAmount;
           this.SellTotal.FinalAmount += e1.FinalAmount;
+          this.SellTotal.Quantity += e1.Quantity;
         });
       } else {
         toastr.error(response.Message);

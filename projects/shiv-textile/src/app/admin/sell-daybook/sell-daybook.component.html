@@ -58,8 +58,8 @@
                                             {{model.CategoryName}}</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-3" style="margin-top: 20px;">
-                                    <button (click)="getSellDaybookReport()" class="btn btn-success">Sell</button>
+                                <div class="col-sm-6" style="margin-top: 20px;">
+                                    <button (click)="getSellDaybookReport()" class="btn btn-success btn-lg">Sell</button>
                                 </div>
                             </div>
 
@@ -88,6 +88,7 @@
                                             <th style="cursor: pointer;" (click)="sort('Address')">Address</th>
                                             <th style="cursor: pointer;" (click)="sort('CategoryName')">Category Name
                                             </th>
+                                            <th style="cursor: pointer;" (click)="sort('Quantity')">Quantity</th>
                                             <th style="cursor: pointer;" (click)="sort('SellAmount')">Sell Amount</th>
                                             <th style="cursor: pointer;" (click)="sort('DirectSellAmount')">Direct Sell
                                                 Amt.</th>
@@ -102,6 +103,7 @@
                                             <td>{{model.ShopName}}</td>
                                             <td>{{model.Address}}</td>
                                             <td>{{model.CategoryName}}</td>
+                                            <td>{{model.Quantity}}</td>
                                             <td>{{model.SellAmount}}</td>
                                             <td>{{model.DirectSellAmount}}</td>
                                             <td>{{model.FinalAmount}}</td>
@@ -113,6 +115,8 @@
                                             <th></th>
                                             <th></th>
                                             <th>TOTAL</th>
+                                            <th></th>
+                                            <th>{{SellTotal.Quantity|number}}</th>
                                             <th>{{SellTotal.SellAmount|number}}</th>
                                             <th>{{SellTotal.DirectSellAmount|number}}</th>
                                             <th>{{SellTotal.FinalAmount|number}}</th>
