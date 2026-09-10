@@ -224,6 +224,7 @@
                                                     name="productAutoComplete" [itemTemplate]="productItemTemplate"
                                                     [notFoundTemplate]="productNotFoundTemplate"
                                                     (inputChanged)="changeProductInput($event, formProduct)"
+                                                    (keydown.enter)="onScanEnter($event)"
                                                     [(ngModel)]="SellProduct.productAutoComplete"
                                                     [isLoading]="loadingProductStock"
                                                     (inputCleared)="clearProductStock()"

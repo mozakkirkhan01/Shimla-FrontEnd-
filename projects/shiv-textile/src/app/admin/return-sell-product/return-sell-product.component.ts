@@ -672,5 +672,27 @@ export class ReturnSellProductComponent implements OnInit {
       this.dataLoading = false;
     }));
   }
+  onScanEnter(event: any) {
+    const scannedText: string = (event?.target?.value || '').trim();
+    if (!scannedText) return;
+    event.preventDefault();
 
+    this.loadingProductStock = true;
+    this.service.getProductStockByExactCode({ SearchProduct: scannedText }).subscribe(r1 => {
+      let response = r1 as any;
+      this.loadingProductStock = false;
+      if (response.Message == ConstantData.SuccessMessage) {
+        if (response.ProductStock.Quantity <= 0) {
+          toastr.error("This item is out of stock (Qty: 0).");
+          return;
+        }
+        this.afterProductStockSelected(response.ProductStock);
+      } else {
+        toastr.error("No matching product found for scanned code: " + scannedText);
+      }
+    }, () => {
+      this.loadingProductStock = false;
+      toastr.error("Error occurred while looking up scanned product.");
+    });
+  }
 }
